@@ -1,0 +1,58 @@
+---
+interface Props {
+    siteName?: string;
+    description?: string;
+}
+
+const {
+    siteName = 'TrendBriefly',
+    description = 'Independent coverage of software, artificial intelligence, and hardware \u2014 written for Tech Enthusiasts, Power Users, and Gamers who build and play.'
+} = Astro.props;
+---
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>{siteName}</h3>
+                <p>{description}</p>
+                <p style="font-size: var(--text-sm); color: var(--text-muted);">getnestdaily.xyz</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Topics</h4>
+                <ul>
+                    <li><a href="/pages/category/technology/">Technology</a></li>
+                    <li><a href="/pages/category/artificial-intelligence/">Artificial Intelligence</a></li>
+                    <li><a href="/pages/category/software/">Software</a></li>
+                    <li><a href="/pages/category/productivity/">Productivity</a></li>
+                    <li><a href="/pages/category/business/">Business &amp; Industry</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/pages/blog/">All Articles</a></li>
+                    <li><a href="/pages/about/">About</a></li>
+                    <li><a href="/pages/contact/">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="/pages/privacy-policy/">Privacy Policy</a></li>
+                    <li><a href="/pages/terms-of-service/">Terms of Service</a></li>
+                    <li><a href="/pages/disclaimer/">Disclaimer</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p style="font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--space-2);">{siteName} covers <strong>AI developments</strong>, <strong>software engineering</strong>, <strong>technology news</strong>, and <strong>gaming hardware</strong>. New articles for Power Users and Tech Enthusiasts published regularly.</p>
+            <p>&copy; 2026 {siteName}. All rights reserved.</p>
+        </div>
+    </div>
+</footer>

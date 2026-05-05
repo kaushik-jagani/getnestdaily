@@ -1,0 +1,11 @@
+﻿# ads.txt for TrendBriefly
+# For Google AdSense, add your publisher ID below
+# Format: google.com, pub-xxxxxxxxxxxxxxxx, DIRECT, f08c47fec0942fa0
+
+# Replace the pub-ID with your actual Google AdSense Publisher ID
+# This file helps verify your AdSense account and prevent ad fraud
+
+google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+
+# Add any additional ad networks as needed
+# Format: domain, publisher-id, relationship-type, certification-id

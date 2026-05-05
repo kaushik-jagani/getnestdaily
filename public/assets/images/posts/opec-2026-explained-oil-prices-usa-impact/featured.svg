@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Oil pump jack with OPEC market backdrop</title>
+  <desc id="desc">A wide editorial banner showing an oil pump jack silhouette and OPEC lettering against a bright blue energy-market background.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#02a9f4"/>
+      <stop offset="0.56" stop-color="#0785d8"/>
+      <stop offset="1" stop-color="#0d4f9c"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#30251c"/>
+      <stop offset="1" stop-color="#71604a"/>
+    </linearGradient>
+    <filter id="softBlur">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="675" fill="url(#sky)"/>
+  <circle cx="760" cy="145" r="54" fill="#fff" opacity=".86" filter="url(#softBlur)"/>
+  <circle cx="910" cy="142" r="54" fill="#fff" opacity=".82" filter="url(#softBlur)"/>
+  <circle cx="740" cy="286" r="58" fill="#fff" opacity=".82" filter="url(#softBlur)"/>
+  <circle cx="905" cy="287" r="58" fill="#fff" opacity=".78" filter="url(#softBlur)"/>
+  <rect x="818" y="138" width="38" height="212" rx="19" fill="#fff" opacity=".82" transform="rotate(24 837 244)" filter="url(#softBlur)"/>
+  <text x="690" y="510" fill="#fff" opacity=".82" font-family="Arial, Helvetica, sans-serif" font-size="120" font-weight="700" letter-spacing="9" filter="url(#softBlur)">OPEC</text>
+  <path d="M0 590 C170 555 285 595 458 565 C620 536 787 575 1200 540 L1200 675 L0 675 Z" fill="url(#ground)"/>
+  <g fill="#151515" stroke="#070707" stroke-width="10" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M185 462 L470 462 L505 590 L145 590 Z"/>
+    <path d="M238 462 L278 273 L417 273 L458 462 Z" fill="none"/>
+    <path d="M263 358 H432 M250 421 H446 M290 273 V590 M404 273 V590 M278 273 L458 462 M417 273 L238 462"/>
+    <path d="M105 246 L390 170 L576 245 L548 285 L378 238 L125 299 Z"/>
+    <path d="M39 214 L123 202 L162 240 L122 302 L31 292 L10 248 Z"/>
+    <path d="M585 122 L714 286 L657 324 L530 157 Z"/>
+    <path d="M584 124 L650 63 L716 171 Z"/>
+    <path d="M547 286 L594 357"/>
+    <path d="M603 357 L645 588"/>
+    <ellipse cx="646" cy="594" rx="28" ry="15"/>
+  </g>
+  <g fill="#3e3025" opacity=".55">
+    <circle cx="114" cy="587" r="8"/>
+    <circle cx="210" cy="574" r="6"/>
+    <circle cx="330" cy="586" r="9"/>
+    <circle cx="548" cy="568" r="7"/>
+    <circle cx="830" cy="557" r="8"/>
+    <circle cx="1045" cy="544" r="7"/>
+  </g>
+</svg>

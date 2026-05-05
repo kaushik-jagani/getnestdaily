@@ -1,0 +1,29 @@
+---
+---
+
+<section class="newsletter-section">
+    <div class="container newsletter-content">
+        <h2>Stay Updated</h2>
+        <p>Subscribe to our newsletter for weekly insights</p>
+        <form class="newsletter-form" id="newsletterForm">
+            <input type="email" placeholder="Enter your email" required aria-label="Email address">
+            <button type="submit">Subscribe</button>
+        </form>
+    </div>
+</section>
+
+<script is:inline>
+  (function() {
+    var nf = document.getElementById('newsletterForm');
+    if (nf) {
+      nf.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var btn = nf.querySelector('button');
+        var original = btn.textContent;
+        btn.textContent = 'Subscribed! \u2713';
+        btn.disabled = true;
+        setTimeout(function() { btn.textContent = original; btn.disabled = false; nf.reset(); }, 2000);
+      });
+    }
+  })();
+</script>

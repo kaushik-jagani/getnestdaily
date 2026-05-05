@@ -1,0 +1,33 @@
+---
+import type { Post } from '../../lib/posts';
+import { getPostCategories, capitalizeWords, formatDate, getExcerpt, categoryUrl, postUrl, resolveImageUrl } from '../../lib/posts';
+
+interface Props {
+  post: Post;
+  isFullWidth?: boolean;
+}
+
+const { post, isFullWidth = false } = Astro.props;
+const categories = getPostCategories(post);
+const excerpt = getExcerpt(post.content, isFullWidth ? 180 : 100);
+const href = postUrl(post.slug);
+---
+
+<div class={isFullWidth ? 'news-card-full' : 'news-card-horizontal'} data-post-url={href}>
+    <div class="news-card-image-wrapper">
+        <img src={resolveImageUrl(post.image)} alt={post.title} loading="lazy" decoding="async">
+    </div>
+    <div class="news-card-content">
+        <div class="news-card-meta-top">
+            {categories.map(category => (
+                <a href={categoryUrl(category)} class="news-category">{capitalizeWords(category)}</a>
+            ))}
+        </div>
+        <h3 class="news-card-title"><a href={href}>{post.title}</a></h3>
+        <p class="news-card-excerpt">{excerpt}</p>
+        <div class="news-card-meta-bottom">
+            <span>By {post.author}</span>
+            <time datetime={post.date}>{formatDate(post.date)}</time>
+        </div>
+    </div>
+</div>

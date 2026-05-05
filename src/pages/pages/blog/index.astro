@@ -1,0 +1,153 @@
+﻿---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogFeedCard from '../../../components/cards/BlogFeedCard.astro';
+import SidebarNewsCard from '../../../components/cards/SidebarNewsCard.astro';
+import { getAllPosts, getAllCategories, capitalizeWords, categoryUrl, postMatchesCategory, getCategoryPostCount, getPostCategories, getExcerpt, formatDate, postUrl, resolveImageUrl } from '../../../lib/posts';
+
+const posts = await getAllPosts();
+const categories = await getAllCategories();
+
+// We need to resolve all category counts
+const categoryCounts = await Promise.all(categories.map(c => getCategoryPostCount(c)));
+
+// Featured hero: newest post
+const heroPost = posts[0];
+const feedPosts = posts.slice(1);
+const heroCategory = heroPost ? (getPostCategories(heroPost)[0] || 'News') : '';
+const heroExcerpt = heroPost ? getExcerpt(heroPost.content, 200) : '';
+const heroUrl = heroPost ? postUrl(heroPost.slug) : '';
+
+// Sidebar: popular/featured
+const popularPosts = posts.filter(p => p.featured).slice(0, 5);
+const sidebarPosts = popularPosts.length > 0 ? popularPosts : posts.slice(0, 5);
+---
+
+<BaseLayout
+    title="Blog — Latest Articles on AI, Software & Technology | TrendBriefly"
+    description="Explore our complete collection of in-depth articles covering artificial intelligence, software engineering, technology trends, and productivity tools. Updated regularly with expert analysis."
+    canonical="https://getnestdaily.xyz/pages/blog/"
+    ogImage="/assets/images/og-default.jpg"
+>
+    <!-- Page Header with Search -->
+    <section class="page-header">
+        <div class="container">
+            <h1>All Articles</h1>
+            <p>Explore our complete collection of articles</p>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search articles..." class="search-input" aria-label="Search articles">
+                <button class="search-btn" id="searchBtn">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Featured Hero -->
+    {heroPost && (
+        <section class="blog-featured-section">
+            <div class="container">
+                <div id="blogFeaturedHero">
+                    <a href={heroUrl} class="blog-hero-card">
+                        <div class="blog-hero-image">
+                            <img src={resolveImageUrl(heroPost.image)} alt={heroPost.title} fetchpriority="high" decoding="async">
+                        </div>
+                        <div class="blog-hero-overlay">
+                            <span class="blog-hero-badge">{capitalizeWords(heroCategory)}</span>
+                            <h2 class="blog-hero-title">{heroPost.title}</h2>
+                            <p class="blog-hero-excerpt">{heroExcerpt}</p>
+                            <div class="blog-hero-meta">
+                                <span>By {heroPost.author}</span>
+                                <time datetime={heroPost.date}>{formatDate(heroPost.date)}</time>
+                                {heroPost.reading_time && <span>{heroPost.reading_time} read</span>}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    )}
+
+    <!-- Blog Content: Feed + Sidebar -->
+    <section class="blog-feed-section">
+        <div class="container blog-feed-layout">
+            <!-- Main Article Feed -->
+            <div class="blog-feed-main">
+                <h2 class="section-heading">Latest Articles</h2>
+                <div id="blogFeedList">
+                    {feedPosts.map(post => <BlogFeedCard post={post} />)}
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="blog-feed-sidebar">
+                <!-- Categories Widget -->
+                <div class="sidebar-widget">
+                    <h3 class="sidebar-widget-title">Categories</h3>
+                    <div id="blogSidebarCategories">
+                        {categories.map((category, index) => (
+                            <a href={categoryUrl(category)} class="sidebar-category-link">
+                                <span>{capitalizeWords(category)}</span>
+                                <span class="count">{categoryCounts[index]}</span>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+
+                <!-- Popular Posts Widget -->
+                <div class="sidebar-widget">
+                    <h3 class="sidebar-widget-title">Popular</h3>
+                    <div id="blogSidebarPopular">
+                        {sidebarPosts.map(post => <SidebarNewsCard post={post} />)}
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <!-- Client-side search filtering -->
+    <script is:inline>
+      (function() {
+        var searchInput = document.getElementById('searchInput');
+        var searchBtn = document.getElementById('searchBtn');
+        var feedList = document.getElementById('blogFeedList');
+        if (!searchInput || !feedList) return;
+
+        var allCards = Array.from(feedList.querySelectorAll('.blog-feed-card'));
+
+        function performSearch() {
+          var query = searchInput.value.trim().toLowerCase();
+          if (!query) {
+            allCards.forEach(function(card) { card.style.display = ''; });
+            return;
+          }
+          var found = 0;
+          allCards.forEach(function(card) {
+            var text = card.textContent.toLowerCase();
+            if (text.includes(query)) {
+              card.style.display = '';
+              found++;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+          // If no results found, show a message
+          var noContent = feedList.querySelector('.no-content-search');
+          if (noContent) noContent.remove();
+          if (found === 0) {
+            var msg = document.createElement('div');
+            msg.className = 'no-content no-content-search';
+            msg.innerHTML = '<p>No posts found for "<strong>' + query.replace(/</g, '&lt;') + '</strong>".</p>';
+            feedList.appendChild(msg);
+          }
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') performSearch(); });
+
+        var timer;
+        searchInput.addEventListener('input', function() {
+          clearTimeout(timer);
+          timer = setTimeout(performSearch, 300);
+        });
+      })();
+    </script>
+</BaseLayout>
+

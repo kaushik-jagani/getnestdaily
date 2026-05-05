@@ -1,0 +1,25 @@
+{
+  "name": "getnestdaily-astro",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "generate-types": "wrangler types"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^13.3.0",
+    "@astrojs/sitemap": "^3.7.2",
+    "@fontsource-variable/inter": "^5.2.8",
+    "astro": "^6.2.1",
+    "wrangler": "^4.87.0"
+  },
+  "overrides": {
+    "vite": "^7"
+  }
+}

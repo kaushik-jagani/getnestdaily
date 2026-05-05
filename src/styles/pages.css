@@ -1,0 +1,299 @@
+/* ============================================
+   PAGES — About, Contact, Privacy, Terms
+   Shared styles for static content pages.
+   Imported globally via BaseLayout.astro.
+   ============================================ */
+
+/* ── About ── */
+
+.about-standards-table {
+    margin: var(--space-6) 0 var(--space-10);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+.standards-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    background: var(--bg-card);
+}
+.standards-table thead {
+    background: var(--bg-secondary);
+}
+.standards-table th {
+    padding: var(--space-4) var(--space-5);
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+}
+.standards-table td {
+    padding: var(--space-4) var(--space-5);
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-light);
+    line-height: var(--leading-relaxed);
+    vertical-align: top;
+}
+.standards-table td:first-child {
+    white-space: nowrap;
+    color: var(--text-primary);
+    width: 160px;
+}
+.standards-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.standards-table tbody tr:hover td {
+    background: var(--hover-bg);
+}
+
+/* ── Contact ── */
+
+.contact-page-layout {
+    max-width: 720px;
+    margin: 0 auto;
+}
+.contact-info-col h2 {
+    margin-bottom: var(--space-4);
+}
+.contact-info-col > p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-8);
+    line-height: var(--leading-relaxed);
+}
+.contact-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    margin-bottom: var(--space-10);
+}
+@media (max-width: 520px) {
+    .contact-cards { grid-template-columns: 1fr; }
+}
+.contact-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+.contact-card-icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-subtle);
+    border-radius: var(--radius-md);
+    color: var(--accent);
+}
+.contact-card h4 {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.contact-card p {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+}
+.contact-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+}
+.contact-link:hover { text-decoration: underline; }
+
+.contact-table-heading {
+    margin: 0 0 var(--space-4);
+    font-size: var(--heading-3);
+    color: var(--text-primary);
+}
+.contact-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-8);
+}
+.contact-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    background: var(--bg-card);
+}
+.contact-table thead {
+    background: var(--bg-secondary);
+}
+.contact-table th {
+    padding: var(--space-4) var(--space-5);
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+}
+.contact-table td {
+    padding: var(--space-4) var(--space-5);
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-light);
+    line-height: var(--leading-relaxed);
+    vertical-align: top;
+}
+.contact-table td:first-child {
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    width: 200px;
+}
+.contact-table tbody tr:last-child td { border-bottom: none; }
+.contact-table tbody tr:hover td { background: var(--hover-bg); }
+.contact-table a { color: var(--accent); text-decoration: none; }
+.contact-table a:hover { text-decoration: underline; }
+
+.contact-notice {
+    padding: var(--space-4) var(--space-5);
+    background: var(--bg-secondary);
+    border-left: 3px solid var(--border-hover);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+}
+.contact-notice p { margin: 0; }
+.contact-notice strong { color: var(--text-primary); }
+
+/* ── Privacy Policy & Terms of Service (shared) ── */
+
+.policy-layout {
+    max-width: var(--content-max);
+    margin: 0 auto;
+}
+.policy-intro-box {
+    padding: var(--space-5) var(--space-6);
+    background: var(--accent-subtle);
+    border-left: 4px solid var(--accent);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-10);
+}
+.policy-intro-box p {
+    margin: 0;
+    color: var(--text-primary);
+    line-height: var(--leading-relaxed);
+}
+.policy-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    margin: var(--space-6) 0 var(--space-8);
+}
+.policy-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    background: var(--bg-card);
+}
+.policy-table thead {
+    background: var(--bg-secondary);
+}
+.policy-table th {
+    padding: var(--space-3) var(--space-5);
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+}
+.policy-table td {
+    padding: var(--space-3) var(--space-5);
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-light);
+    line-height: var(--leading-relaxed);
+    vertical-align: top;
+}
+.policy-table td:first-child {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.policy-table tbody tr:last-child td { border-bottom: none; }
+.policy-table tbody tr:hover td { background: var(--hover-bg); }
+.policy-table a { color: var(--accent); text-decoration: none; }
+.policy-table a:hover { text-decoration: underline; }
+.policy-table code {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    background: var(--bg-tertiary);
+    padding: 2px 5px;
+    border-radius: 4px;
+    color: var(--text-primary);
+}
+
+/* ── Terms of Service — Disclaimer divider ── */
+
+.disclaimer-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin: var(--space-12) 0 var(--space-8);
+}
+.disclaimer-divider::before,
+.disclaimer-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+.disclaimer-divider span {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap;
+    padding: var(--space-1) var(--space-3);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+}
+
+/* ── Footer extensions ── */
+
+.footer-brand p + p.footer-domain {
+    margin-top: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+}
+.footer-seo-strip {
+    border-top: 1px solid var(--border);
+    padding: var(--space-5) 0;
+    margin-bottom: var(--space-5);
+}
+.footer-seo-strip p {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    line-height: var(--leading-relaxed);
+    max-width: 720px;
+    margin: 0;
+}
+.footer-seo-strip a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-hover);
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+.footer-seo-strip a:hover {
+    color: var(--accent);
+    border-color: var(--accent-border);
+}

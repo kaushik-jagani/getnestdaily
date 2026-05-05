@@ -1,0 +1,185 @@
+﻿---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/cards/BlogCard.astro';
+import ShareButtons from '../../components/ShareButtons.astro';
+import { render } from 'astro:content';
+import { getAllPosts, getPostBySlug, getRelatedPosts, getPostCategories, capitalizeWords, formatDate, estimateReadTime, categoryUrl, postUrl, resolveImageUrl } from '../../lib/posts';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getAllPosts();
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
+};
+
+const { post } = Astro.props;
+const categories = getPostCategories(post);
+const readTime = estimateReadTime(post.content);
+const related = await getRelatedPosts(post, 3);
+const description = post.meta_description || post.content.replace(/<[^>]*>/g, '').substring(0, 160);
+
+// Use Astro's native content renderer
+const { Content, headings } = await render(post.entry);
+const tocItems = headings.filter(h => h.depth === 2 || h.depth === 3).map(h => ({
+  level: h.depth,
+  text: h.text,
+  id: h.slug
+}));
+
+// Author bio
+const bios: Record<string, string> = {
+  'Kaushik Jagani': 'Tech writer and software enthusiast exploring the intersection of AI, development, and the future of work.',
+  'Global Info Nest Team': 'A team of tech writers and industry analysts covering AI, software engineering, and emerging technology trends.'
+};
+const authorBio = bios[post.author] || 'Experienced writer and technology enthusiast.';
+
+const siteUrl = 'https://getnestdaily.xyz';
+const postCanonical = `${siteUrl}/blog/${post.slug}/`;
+const postImageUrl = post.image.startsWith('http') ? post.image : `${siteUrl}/${post.image}`;
+
+// Structured data — BlogPosting
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.title,
+  "image": postImageUrl,
+  "datePublished": post.date,
+  "dateModified": post.date,
+  "author": { "@type": "Person", "name": post.author },
+  "publisher": {
+    "@type": "Organization",
+    "name": "TrendBriefly",
+    "logo": { "@type": "ImageObject", "url": `${siteUrl}/favicon.svg` }
+  },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": postCanonical },
+  "url": postCanonical,
+  "description": description,
+  "wordCount": post.content.replace(/<[^>]*>/g, '').split(/\s+/).length,
+  "articleSection": categories[0] || "Technology"
+};
+
+// Breadcrumb schema
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${siteUrl}/pages/blog/` },
+    { "@type": "ListItem", "position": 3, "name": post.title, "item": postCanonical }
+  ]
+};
+---
+
+<BaseLayout
+  title={`${post.title} — TrendBriefly`}
+  description={description}
+  ogImage={postImageUrl}
+  ogType="article"
+  keywords={post.keywords}
+  canonical={postCanonical}
+  articleDate={post.date}
+  articleAuthor={post.author}
+  articleSection={categories[0]}
+>
+    <Fragment slot="head">
+        <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+        <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    </Fragment>
+
+    <!-- Reading Progress -->
+    <div class="reading-progress" id="readingProgress"></div>
+
+    <!-- Article -->
+    <article class="article-container">
+        <div class="container">
+            <!-- Post Meta -->
+            <div id="postMeta">
+                <div class="breadcrumb">
+                    <a href="/">Home</a><span>/</span>
+                    <a href="/pages/blog/">Blog</a><span>/</span>
+                    <span>{post.title}</span>
+                </div>
+                <div class="post-header-meta">
+                    <h1>{post.title}</h1>
+                    <div class="post-meta">
+                        <span class="blog-card-categories">
+                            {categories.map(category => (
+                                <a href={categoryUrl(category)} class="blog-card-category">{capitalizeWords(category)}</a>
+                            ))}
+                        </span>
+                        <span>By <strong>{post.author}</strong></span>
+                        <time datetime={post.date}>{formatDate(post.date)}</time>
+                        <span>{readTime} min read</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Image -->
+            <div class="post-featured-image">
+                <img src={resolveImageUrl(post.image)} alt={post.title} fetchpriority="high" decoding="async">
+            </div>
+
+            <!-- Table of Contents -->
+            {tocItems.length > 0 && (
+                <div class="table-of-contents">
+                    <h3>Table of Contents</h3>
+                    <ul>
+                        {tocItems.map(item => (
+                            <li style={item.level === 3 ? 'padding-left:1rem' : ''}>
+                                <a href={`#${item.id}`}>{item.text}</a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            <!-- Post Content -->
+            <div class="post-content">
+                <Content />
+            </div>
+
+            <!-- Author Bio -->
+            <div class="author-bio">
+                <div class="author-avatar-large">{post.author.charAt(0)}</div>
+                <div class="author-info">
+                    <h4>About the Author</h4>
+                    <p><strong>{post.author}</strong></p>
+                    <p>{authorBio}</p>
+                </div>
+            </div>
+
+            <!-- Share Buttons -->
+            <ShareButtons />
+        </div>
+    </article>
+
+    <!-- Related Posts -->
+    {related.length > 0 && (
+        <section class="related-posts-section">
+            <div class="container">
+                <h2>Related Articles</h2>
+                <div class="posts-grid">
+                    {related.map(p => <BlogCard post={p} />)}
+                </div>
+            </div>
+        </section>
+    )}
+
+    <!-- Reading Progress + Share Buttons scripts -->
+    <script is:inline>
+      // Reading progress bar
+      (function() {
+        var bar = document.getElementById('readingProgress');
+        if (!bar) return;
+        window.addEventListener('scroll', function() {
+          var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          if (docHeight <= 0) return;
+          var progress = Math.min((window.scrollY / docHeight) * 100, 100);
+          bar.style.width = progress + '%';
+        }, { passive: true });
+      })();
+    </script>
+</BaseLayout>
+

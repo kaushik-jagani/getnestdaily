@@ -1,0 +1,21 @@
+---
+import type { Post } from '../../lib/posts';
+import { formatDate, postUrl, resolveImageUrl } from '../../lib/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const href = postUrl(post.slug);
+---
+
+<a href={href} class="sidebar-news-card">
+    <div class="sidebar-news-image">
+        <img src={resolveImageUrl(post.image)} alt={post.title} loading="lazy" decoding="async">
+    </div>
+    <div class="sidebar-news-content">
+        <h5>{post.title}</h5>
+        <time datetime={post.date}>{formatDate(post.date)}</time>
+    </div>
+</a>

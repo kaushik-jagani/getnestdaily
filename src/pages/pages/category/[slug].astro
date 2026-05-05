@@ -1,0 +1,71 @@
+﻿---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogCard from '../../../components/cards/BlogCard.astro';
+import { getAllPosts, getAllCategories, getPostsByCategory, capitalizeWords, slugify } from '../../../lib/posts';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const categories = await getAllCategories();
+  return categories.map(category => ({
+    params: { slug: slugify(category) },
+    props: { categoryName: category, categorySlug: slugify(category) }
+  }));
+};
+
+const { categoryName, categorySlug } = Astro.props;
+const posts = await getPostsByCategory(categorySlug);
+const displayName = capitalizeWords(categorySlug);
+
+const siteUrl = 'https://getnestdaily.xyz';
+const categoryCanonical = `${siteUrl}/pages/category/${categorySlug}/`;
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${siteUrl}/pages/blog/` },
+    { "@type": "ListItem", "position": 3, "name": displayName, "item": categoryCanonical }
+  ]
+};
+
+const collectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": `${displayName} Articles`,
+  "url": categoryCanonical,
+  "description": `Explore in-depth articles, tutorials, and expert analysis about ${displayName} on TrendBriefly.`,
+  "numberOfItems": posts.length
+};
+---
+
+<BaseLayout
+    title={`${displayName} Articles & Guides | TrendBriefly`}
+    description={`Explore in-depth articles, tutorials, and expert analysis about ${displayName}. Stay updated with the latest ${displayName.toLowerCase()} news, trends, and practical guides on TrendBriefly.`}
+    canonical={categoryCanonical}
+    ogImage="/assets/images/og-default.jpg"
+>
+    <Fragment slot="head">
+        <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+        <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+    </Fragment>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>{displayName}</h1>
+            <p>Articles about {displayName}</p>
+        </div>
+    </section>
+
+    <section class="blog-section">
+        <div class="container">
+            <div class="posts-grid">
+                {posts.length > 0 ? (
+                    posts.map(post => <BlogCard post={post} />)
+                ) : (
+                    <div class="no-content"><p>No posts found.</p></div>
+                )}
+            </div>
+        </div>
+    </section>
+</BaseLayout>

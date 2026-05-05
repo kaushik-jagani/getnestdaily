@@ -1,0 +1,168 @@
+﻿---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroMainCard from '../components/cards/HeroMainCard.astro';
+import HeroSideCard from '../components/cards/HeroSideCard.astro';
+import HorizontalNewsCard from '../components/cards/HorizontalNewsCard.astro';
+import SidebarNewsCard from '../components/cards/SidebarNewsCard.astro';
+import TrendingCard from '../components/cards/TrendingCard.astro';
+import Newsletter from '../components/Newsletter.astro';
+import { getAllPosts, getAllCategories, capitalizeWords, categoryUrl, postMatchesCategory, getCategoryPostCount } from '../lib/posts';
+
+const posts = await getAllPosts();
+const categories = await getAllCategories();
+const categoryCounts = await Promise.all(categories.map(c => getCategoryPostCount(c)));
+
+// Hero: first 4 posts
+const heroCount = Math.min(4, posts.length);
+const heroMain = posts[0];
+const heroSide = posts.slice(1, 4);
+
+// Main feed: skip hero, take next 15
+const mainPosts = posts.slice(heroCount, heroCount + 15);
+
+// Sidebar: top 6
+const sidebarPosts = posts.slice(0, 6);
+
+// Trending: featured posts not in hero, then fill
+const heroIds = new Set(posts.slice(0, heroCount).map(p => p.id));
+const featuredPosts = posts.filter(p => p.featured && !heroIds.has(p.id));
+const nonHeroPosts = posts.slice(heroCount);
+const trendingPool: typeof posts = [];
+const usedIds = new Set<string>();
+featuredPosts.forEach(p => {
+  if (trendingPool.length < 6 && !usedIds.has(p.id)) { trendingPool.push(p); usedIds.add(p.id); }
+});
+nonHeroPosts.forEach(p => {
+  if (trendingPool.length < 6 && !usedIds.has(p.id)) { trendingPool.push(p); usedIds.add(p.id); }
+});
+const showTrending = posts.length >= 7;
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "TrendBriefly",
+  "url": "https://getnestdaily.xyz",
+  "description": "Independent coverage of AI developments, software engineering, technology news, and productivity tools for tech enthusiasts.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://getnestdaily.xyz/pages/blog/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "TrendBriefly",
+  "url": "https://getnestdaily.xyz",
+  "logo": "https://getnestdaily.xyz/favicon.svg",
+  "description": "Independent coverage of software, artificial intelligence, and hardware — written for Tech Enthusiasts, Power Users, and Gamers who build and play.",
+  "sameAs": []
+};
+---
+
+<BaseLayout
+  title="TrendBriefly — AI News, Software Engineering & Tech Guides"
+  description="Independent coverage of AI developments, software engineering, technology news, and productivity tools. Expert guides and in-depth articles for tech enthusiasts and developers."
+  ogImage="/assets/images/og-default.jpg"
+>
+    <Fragment slot="head">
+        <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+        <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+    </Fragment>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="sr-only">TrendBriefly — Latest AI &amp; Technology News</h1>
+            <div class="hero-grid">
+                {heroMain && <HeroMainCard post={heroMain} />}
+                {heroSide.length > 0 && (
+                    <div class="hero-side-cards">
+                        {heroSide.map(post => <HeroSideCard post={post} />)}
+                    </div>
+                )}
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Layout (News Feed + Sidebar) -->
+    <section class="main-content-section">
+        <div class="container main-layout">
+            <!-- Left Column: Main News Feed -->
+            <div class="content-column">
+                <h2 class="section-heading">Latest News</h2>
+                <div id="mainNewsList">
+                    {mainPosts.map((post, index) => (
+                        <HorizontalNewsCard post={post} isFullWidth={index === 0 || index % 5 === 0} />
+                    ))}
+                </div>
+            </div>
+
+            <!-- Right Column: Sidebar -->
+            <aside class="sidebar-column">
+                <!-- Popular Widget -->
+                <div class="widget">
+                    <h3>Popular</h3>
+                    <div class="sidebar-news-list">
+                        {sidebarPosts.map(post => <SidebarNewsCard post={post} />)}
+                    </div>
+                </div>
+
+                <!-- Sidebar Ad -->
+                <div class="widget widget-ad">
+                    <span class="ad-label">Advertisement</span>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-1234567890123456"
+                         data-ad-slot="1234567890"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script is:inline>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+
+                <!-- Categories Widget -->
+                <div class="widget">
+                    <h3>Categories</h3>
+                    <div class="sidebar-categories-list">
+                        {categories.map((category, index) => (
+                            <a href={categoryUrl(category)} class="sidebar-category-link">
+                                <span>{capitalizeWords(category)}</span>
+                                <span class="count">{categoryCounts[index]}</span>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <!-- Trending Section -->
+    {showTrending && (
+        <section class="trending-section">
+            <div class="container">
+                <h2 class="section-heading">Trending Now</h2>
+                <div class="trending-grid">
+                    {trendingPool.map(post => <TrendingCard post={post} />)}
+                </div>
+            </div>
+        </section>
+    )}
+
+    <!-- Newsletter -->
+    <Newsletter />
+
+    <script is:inline>
+      // News card click
+      document.querySelectorAll('.news-card-full, .news-card-horizontal').forEach(function(card) {
+        card.addEventListener('click', function(e) {
+          if (e.target.tagName.toLowerCase() === 'a') return;
+          var url = card.getAttribute('data-post-url');
+          if (url) window.location.href = url;
+        });
+      });
+    </script>
+</BaseLayout>
+

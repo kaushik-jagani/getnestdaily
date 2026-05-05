@@ -1,0 +1,43 @@
+---
+import type { Post } from '../../lib/posts';
+import { getPostCategories, capitalizeWords, formatDate, getExcerpt, categoryUrl, postUrl, resolveImageUrl } from '../../lib/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const excerpt = getExcerpt(post.content, 120);
+const href = postUrl(post.slug);
+const categories = getPostCategories(post);
+---
+
+<div class="blog-card" data-post-url={href}>
+    <img src={resolveImageUrl(post.image)} alt={post.title} class="blog-card-image" loading="lazy" decoding="async">
+    <div class="blog-card-content">
+        <div class="blog-card-categories">
+            {categories.map(category => (
+                <a href={categoryUrl(category)} class="blog-card-category">{capitalizeWords(category)}</a>
+            ))}
+        </div>
+        <h3 class="blog-card-title"><a href={href}>{post.title}</a></h3>
+        <p class="blog-card-excerpt">{excerpt}</p>
+        <div class="blog-card-meta">
+            <div class="blog-card-author">
+                <div class="author-avatar">{post.author.charAt(0)}</div>
+                <span>{post.author}</span>
+            </div>
+            <time datetime={post.date}>{formatDate(post.date)}</time>
+        </div>
+    </div>
+</div>
+
+<script is:inline>
+  document.querySelectorAll('.blog-card').forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      if (e.target.closest('.blog-card-category')) return;
+      var url = card.getAttribute('data-post-url');
+      if (url) window.location.href = url;
+    });
+  });
+</script>

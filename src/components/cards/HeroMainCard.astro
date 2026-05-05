@@ -1,0 +1,26 @@
+---
+import type { Post } from '../../lib/posts';
+import { getPostCategories, capitalizeWords, formatDate, getExcerpt, postUrl, resolveImageUrl } from '../../lib/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const category = getPostCategories(post)[0] || 'News';
+const excerpt = getExcerpt(post.content, 140);
+const href = postUrl(post.slug);
+---
+
+<a href={href} class="hero-main-card">
+    <img src={resolveImageUrl(post.image)} alt={post.title} fetchpriority="high" decoding="async">
+    <div class="hero-main-overlay">
+        <span class="hero-category-badge">{capitalizeWords(category)}</span>
+        <h2>{post.title}</h2>
+        <p class="hero-excerpt">{excerpt}</p>
+        <div class="hero-meta">
+            <span>By {post.author}</span>
+            <time datetime={post.date}>{formatDate(post.date)}</time>
+        </div>
+    </div>
+</a>

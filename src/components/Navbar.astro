@@ -1,0 +1,46 @@
+---
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/' || currentPath === '/index.html';
+  return currentPath.includes(href.replace(/\/$/, ''));
+}
+---
+
+<nav class="navbar" aria-label="Main navigation">
+    <div class="container nav-container">
+        <div class="logo">
+            <a href="/" aria-label="TrendBriefly home">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 8px;" aria-hidden="true">
+                    <circle cx="16" cy="16" r="16" fill="#2563eb"/>
+                    <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" fill="white" font-size="13" font-weight="700" font-family="Arial, sans-serif">TB</text>
+                </svg>
+                <span>TrendBriefly</span>
+            </a>
+        </div>
+        <div class="nav-center" id="navMenu">
+            <a href="/" class:list={["nav-link", { active: isActive('/') && !currentPath.includes('/pages/') && !currentPath.includes('/blog/') }]}>Home</a>
+            <a href="/pages/blog/" class:list={["nav-link", { active: currentPath.includes('/pages/blog') || currentPath.includes('/blog/') }]}>Blog</a>
+            <div class="nav-dropdown">
+                <a href="/pages/category/" class:list={["nav-link nav-dropdown-toggle", { active: currentPath.includes('/pages/category') }]}>Topics</a>
+                <div class="nav-dropdown-menu">
+                    <a href="/pages/category/technology/">Technology</a>
+                    <a href="/pages/category/artificial-intelligence/">Artificial Intelligence</a>
+                    <a href="/pages/category/software/">Software</a>
+                    <a href="/pages/category/productivity/">Productivity</a>
+                    <a href="/pages/category/business/">Business &amp; Industry</a>
+                </div>
+            </div>
+            <a href="/pages/about/" class:list={["nav-link", { active: currentPath.includes('/pages/about') }]}>About</a>
+            <a href="/pages/contact/" class:list={["nav-link", { active: currentPath.includes('/pages/contact') }]}>Contact</a>
+        </div>
+        <div class="nav-right">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="theme-icon">☀️</span>
+            </button>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</nav>

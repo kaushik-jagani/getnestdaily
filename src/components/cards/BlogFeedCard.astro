@@ -1,0 +1,35 @@
+---
+import type { Post } from '../../lib/posts';
+import { getPostCategories, capitalizeWords, formatDate, getExcerpt, categoryUrl, postUrl, resolveImageUrl } from '../../lib/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const category = getPostCategories(post)[0] || 'News';
+const excerpt = getExcerpt(post.content, 140);
+const href = postUrl(post.slug);
+---
+
+<article class="blog-feed-card">
+    <a href={href} class="blog-feed-card-image">
+        <img src={resolveImageUrl(post.image)} alt={post.title} loading="lazy" decoding="async">
+    </a>
+    <div class="blog-feed-card-body">
+        <a href={categoryUrl(category)} class="blog-feed-category">{capitalizeWords(category)}</a>
+        <h3 class="blog-feed-card-title"><a href={href}>{post.title}</a></h3>
+        <p class="blog-feed-card-excerpt">{excerpt}</p>
+        <div class="blog-feed-card-meta">
+            <span class="blog-feed-author">{post.author}</span>
+            <span class="blog-feed-dot">·</span>
+            <time datetime={post.date}>{formatDate(post.date)}</time>
+            {post.reading_time && (
+                <>
+                    <span class="blog-feed-dot">·</span>
+                    <span>{post.reading_time}</span>
+                </>
+            )}
+        </div>
+    </div>
+</article>
