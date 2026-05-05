@@ -120,6 +120,8 @@ keywords:
 
 ## The Honest Assessment
 
+<figure class="post-image"><img src="assets/images/posts/meta-ai-age-detection-2026/man-using-smartphone-social-media.avif" alt="Man using smartphone social media app - digital addiction and AI age detection" loading="lazy"><figcaption>Meta's AI age detection affects billions of social media users globally, raising questions about privacy, bias, and digital rights.</figcaption></figure>
+
 <p>Meta's AI age detection system is genuinely designed to address a real problem. Children lie about their age online. They always have, because the incentive structure has always made it easy. The scale at which Meta operates—roughly three billion monthly active users across its family of apps—makes human review impossible. Some form of automated detection was always going to happen. The only question was whether it would happen transparently, or quietly, or not at all.</p>
 
 <p>What Meta has done is choose transparency on its own terms, on its own timeline, ahead of regulatory mandates that would have forced the outcome anyway. That's a rational corporate strategy. It doesn't make the privacy implications disappear.</p>
